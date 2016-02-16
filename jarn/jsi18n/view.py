@@ -32,6 +32,11 @@ class i18njs(BrowserView):
             language = self.request['LANGUAGE']
 
         catalog = self._gettext_catalog(domain, language)
+        if catalog is None and len(language.split('-')) > 1:
+            l_split = language.split('-')
+            language = '{}_{}'.format(l_split[0], l_split[1].upper())
+
+        catalog = self._gettext_catalog(domain, language)
         response = self.request.response
         response.setHeader('content-type', 'application/json')
         response.setBody(json.dumps(catalog))
